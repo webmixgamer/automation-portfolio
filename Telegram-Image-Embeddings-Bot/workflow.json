@@ -1,0 +1,330 @@
+{
+  "name": "Image Embeddings STG",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2ab8d588-40a7-4a14-87ed-328ebedad9c0",
+      "name": "GroupMessage",
+      "webhookId": "2c4e8ed5-7a96-45e3-8bfc-302d9b736e45",
+      "credentials": {
+        "telegramApi": {
+          "id": "<yourID>",
+          "name": "<yourName>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const photos = items[0].json.message.photo;\nconst largestPhoto = photos[photos.length - 1];\nreturn [\n  {\n    json: {\n      file_id: largestPhoto.file_id\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        0
+      ],
+      "id": "86022d9c-6883-490b-8f2e-b673d5378fb8",
+      "name": "GetFileId"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/bot{{$env.imgembeddings_bot_token}}/getFile?file_id={{$json[\"file_id\"]}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "588e8aa0-c132-4b11-9661-ca5f449938b8",
+      "name": "GetFilePath"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/file/bot{{$env.imgembeddings_bot_token}}/{{ $('GetFilePath').item.json.result.file_path }}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        0
+      ],
+      "id": "f761c397-8251-491b-9803-e10cd86f1fab",
+      "name": "DownloadFile"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const buffer = item.binary.data.data;\n  const b64 = Buffer.from(buffer).toString('base64');\n  return {\n    json: { base64: b64 },\n    binary: {}\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        0
+      ],
+      "id": "e47f193b-e88b-47ee-a56e-e330992b0bc1",
+      "name": "MakeBase64"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api-inference.huggingface.co/models/shaktiman404/dummy-bert-base-cased",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.HF_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"inputs\": \"data:image/png;base64,{{$json.base64}}\",\n  \"options\": { \"wait_for_model\": true }\n}\n",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "689c0035-7225-479e-857c-2c852df80ec3",
+      "name": "GetVector"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1G70_s1ML1gnpJ6sa_DhjEU0WFDTjR6BQlwsVNXqKsQ4",
+          "mode": "list",
+          "cachedResultName": "Image Embeddings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G70_s1ML1gnpJ6sa_DhjEU0WFDTjR6BQlwsVNXqKsQ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "\u041b\u0438\u0441\u04421",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G70_s1ML1gnpJ6sa_DhjEU0WFDTjR6BQlwsVNXqKsQ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Group ID": "={{ $('GroupMessage').item.json.message.chat.id }}",
+            "Message ID": "={{ $('GroupMessage').item.json.message.message_id }}",
+            "Timestamp": "={{ $('GroupMessage').item.json.message.date }}",
+            "Embedding vector": "={{ $json.body[0] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Group ID",
+              "displayName": "Group ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message ID",
+              "displayName": "Message ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Embedding vector",
+              "displayName": "Embedding vector",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1260,
+        0
+      ],
+      "id": "1809204b-1119-430b-b81c-ba2676b0a464",
+      "name": "SaveInSheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<yourID>",
+          "name": "<yourName>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "381b0d66-ee2a-48f8-9046-d4416de01128",
+              "leftValue": "={{ $json.message.photo[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        0
+      ],
+      "id": "ec3c1c30-2db9-4474-b228-55cad17ac377",
+      "name": "IfImage"
+    }
+  ],
+  "connections": {
+    "GroupMessage": {
+      "main": [
+        [
+          {
+            "node": "IfImage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFileId": {
+      "main": [
+        [
+          {
+            "node": "GetFilePath",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFilePath": {
+      "main": [
+        [
+          {
+            "node": "DownloadFile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DownloadFile": {
+      "main": [
+        [
+          {
+            "node": "MakeBase64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MakeBase64": {
+      "main": [
+        [
+          {
+            "node": "GetVector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetVector": {
+      "main": [
+        [
+          {
+            "node": "SaveInSheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IfImage": {
+      "main": [
+        [
+          {
+            "node": "GetFileId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "tags": [],
+  "pinData": {},
+  "id": null
+}

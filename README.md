@@ -33,6 +33,24 @@ The full architecture includes:
 ![Loans AI Consultant – Workflow Overview](./assets/loans-ai-consultant.png)
 
 ---
+###  M-9 Telegram Image Embeddings Bot
+
+**Description:**  
+A Telegram bot that automatically processes images sent in a group chat, extracts their embeddings using OpenCLIP, and logs them to a Google Sheet with message metadata. Built and deployed using **n8n**, this bot enables scalable image vectorization for later semantic search or ML analysis.
+
+**Technologies used:**  
+n8n, Telegram Bot API, Google Sheets API, OpenCLIP (via HuggingFace API), Base64 encoding, JavaScript, .env
+
+**Status:**  
+✅ Public — source code available
+
+🔗 [View code](./Telegram-Image-Embeddings-Bot)
+
+📸 Screenshot:  
+![Workflow](./Telegram-Image-Embeddings-Bot/assets/workflow.png)
+
+
+---
 
 ## 👤 About Me
 
