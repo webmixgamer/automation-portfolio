@@ -1,10 +1,10 @@
-# 🖼 Telegram Bot for Extracting Image Embeddings
+#  Telegram Bot for Extracting Image Embeddings
 
 This bot listens to a specific Telegram group and automatically processes incoming images. It converts them to base64, sends them to an OpenCLIP model via API, and logs the resulting vector embeddings into a Google Sheet, along with Telegram metadata.
 
 ---
 
-## ✅ Features
+##  Features
 
 - Listens for image messages in a Telegram group
 - Downloads the image and converts to Base64
@@ -14,7 +14,7 @@ This bot listens to a specific Telegram group and automatically processes incomi
 
 ---
 
-## 🧠 Tech Stack
+##  Tech Stack
 
 - **n8n**
 - **Telegram Bot API**
@@ -25,7 +25,7 @@ This bot listens to a specific Telegram group and automatically processes incomi
 
 ---
 
-## 🚀 Setup
+##  Setup
 
 1. Clone this repository
 2. Create `.env` file using `.env.example`
@@ -37,7 +37,7 @@ This bot listens to a specific Telegram group and automatically processes incomi
 
 ---
 
-## 📦 Folder Structure
+##  Folder Structure
 
 Telegram-Image-Embeddings-Bot/
 ├── assets/ ← workflow screenshot
@@ -45,13 +45,13 @@ Telegram-Image-Embeddings-Bot/
 ├── .env.example ← sample environment config
 └── README.md ← this file
 
-## 🖼 Workflow
+##  Workflow
 
 ![Workflow Image](./assets/workflow.png)
 
 ---
 
-## 🔐 Notes on Security
+##  Notes on Security
 
 - API tokens are stored in `.env`
 - Do not commit `.env` to Git
@@ -59,6 +59,6 @@ Telegram-Image-Embeddings-Bot/
 
 ---
 
-## 👤 Author
+##  Author
 
 Created by [webmixgamer](https://github.com/webmixgamer)
