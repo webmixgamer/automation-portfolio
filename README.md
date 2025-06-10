@@ -1,11 +1,11 @@
-# 📂 automation-portfolio
+#  automation-portfolio
 
 > A curated collection of advanced automation workflows built with **n8n**, integrating LLMs, APIs, and third-party services to solve real business tasks.  
 > Each project is fully functional, production-tested, and reflects my capabilities as a **Developer**, **Architect**, and **Integration Specialist**.
 
 ---
 
-## 🧠 Featured Projects
+##  Featured Projects
 
 ### 🔹 Loans AI Consultant
 
@@ -16,7 +16,7 @@ An advanced AI automation built for a regional lending platform. It acts as a vi
 GPT-4o Mini, GPT-4.1 Nano, Telegram Bot API, MySQL (Dockerized), JavaScript, Google Sheets, Vector Embeddings, Python, Docer, n8n Scheduler
 
 **Status:**  
-✅ Completed (Code under NDA, not available)
+ Completed (Code under NDA, not available)
 
 **Workflow Overview:**  
 The full architecture includes:
@@ -42,17 +42,17 @@ A Telegram bot that automatically processes images sent in a group chat, extract
 n8n, Telegram Bot API, Google Sheets API, OpenCLIP (via HuggingFace API), Base64 encoding, JavaScript, .env
 
 **Status:**  
-✅ Public — source code available
+ Public — source code available
 
-🔗 [View code](./Telegram-Image-Embeddings-Bot)
+ [View code](./Telegram-Image-Embeddings-Bot)
 
-📸 Screenshot:  
+ Screenshot:  
 ![Workflow](./Telegram-Image-Embeddings-Bot/assets/workflow.png)
 
 
 ---
 
-## 👤 About Me
+##  About Me
 
 **Name:** webmixgamer  
 **Role:** Automation Developer | AI Workflow Architect  
